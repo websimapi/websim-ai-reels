@@ -6,13 +6,29 @@ const DURATION_IN_FRAMES = 300;
 const FPS = 30;
 const COMPOSITION_WIDTH = 540;
 const COMPOSITION_HEIGHT = 960;
-const Reel = ({ reelData, isActive }) => {
+const Reel = ({ reelData, isActive, isMuted }) => {
   const playerRef = useRef(null);
   useEffect(() => {
     const player = playerRef.current;
     if (!player) return;
+    if (isMuted) {
+      player.mute();
+    } else {
+      player.unmute();
+    }
+  }, [isMuted]);
+  useEffect(() => {
+    const player = playerRef.current;
+    if (!player) return;
     if (isActive) {
-      player.play();
+      const playPromise = player.play();
+      if (playPromise !== void 0) {
+        playPromise.catch((error) => {
+          console.error("Autoplay was prevented: ", error);
+          player.mute();
+          player.play();
+        });
+      }
     } else {
       player.pause();
       player.seekTo(0);
@@ -21,7 +37,7 @@ const Reel = ({ reelData, isActive }) => {
   if (!reelData) {
     return /* @__PURE__ */ jsxDEV("div", { children: "Loading reel..." }, void 0, false, {
       fileName: "<stdin>",
-      lineNumber: 26,
+      lineNumber: 48,
       columnNumber: 16
     });
   }
@@ -35,6 +51,8 @@ const Reel = ({ reelData, isActive }) => {
       compositionWidth: COMPOSITION_WIDTH,
       compositionHeight: COMPOSITION_HEIGHT,
       loop: true,
+      autoPlay: true,
+      muted: true,
       style: {
         width: "100%",
         height: "100%",
@@ -47,7 +65,7 @@ const Reel = ({ reelData, isActive }) => {
     false,
     {
       fileName: "<stdin>",
-      lineNumber: 30,
+      lineNumber: 52,
       columnNumber: 9
     }
   );
