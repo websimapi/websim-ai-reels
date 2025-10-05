@@ -80,7 +80,7 @@ const MyComposition = ({ scenes }) => {
     columnNumber: 5
   });
 };
-const Scene = ({ imageUrl, text }) => {
+const Scene = ({ imageUrl, text, textPosition }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const imageScale = spring({
@@ -91,6 +91,21 @@ const Scene = ({ imageUrl, text }) => {
     durationInFrames: 90
   });
   const textOpacity = interpolate(frame, [0, 20, 70, 90], [0, 1, 1, 0]);
+  const finalPosition = {
+    vertical: textPosition?.vertical || "middle",
+    horizontal: textPosition?.horizontal || "center"
+  };
+  const justifyContent = {
+    top: "flex-start",
+    middle: "center",
+    bottom: "flex-end"
+  }[finalPosition.vertical];
+  const alignItems = {
+    left: "flex-start",
+    center: "center",
+    right: "flex-end"
+  }[finalPosition.horizontal];
+  const textAlign = finalPosition.horizontal;
   return /* @__PURE__ */ jsxDEV(AbsoluteFill, { children: [
     /* @__PURE__ */ jsxDEV(
       Img,
@@ -107,7 +122,7 @@ const Scene = ({ imageUrl, text }) => {
       false,
       {
         fileName: "<stdin>",
-        lineNumber: 71,
+        lineNumber: 91,
         columnNumber: 7
       }
     ),
@@ -122,7 +137,7 @@ const Scene = ({ imageUrl, text }) => {
       false,
       {
         fileName: "<stdin>",
-        lineNumber: 80,
+        lineNumber: 100,
         columnNumber: 7
       }
     ),
@@ -130,8 +145,8 @@ const Scene = ({ imageUrl, text }) => {
       AbsoluteFill,
       {
         style: {
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent,
+          alignItems,
           padding: "80px 40px"
         },
         children: /* @__PURE__ */ jsxDEV(
@@ -141,7 +156,7 @@ const Scene = ({ imageUrl, text }) => {
               color: "white",
               fontSize: 48,
               fontWeight: "bold",
-              textAlign: "center",
+              textAlign,
               opacity: textOpacity,
               textShadow: "0px 0px 10px rgba(0,0,0,0.8)"
             },
@@ -151,7 +166,7 @@ const Scene = ({ imageUrl, text }) => {
           false,
           {
             fileName: "<stdin>",
-            lineNumber: 92,
+            lineNumber: 112,
             columnNumber: 9
           }
         )
@@ -160,13 +175,13 @@ const Scene = ({ imageUrl, text }) => {
       false,
       {
         fileName: "<stdin>",
-        lineNumber: 85,
+        lineNumber: 105,
         columnNumber: 7
       }
     )
   ] }, void 0, true, {
     fileName: "<stdin>",
-    lineNumber: 70,
+    lineNumber: 90,
     columnNumber: 5
   });
 };
