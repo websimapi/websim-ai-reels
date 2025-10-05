@@ -14,6 +14,7 @@ const App = () => {
   const { isGenerating, generateStoryboard } = useStoryboardGenerator();
   const [showGenerator, setShowGenerator] = useState(false);
   const containerRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
   useEffect(() => {
     if (!isGenerating && reels.length === 0) {
       setShowGenerator(true);
@@ -21,6 +22,28 @@ const App = () => {
       setShowGenerator(false);
     }
   }, [reels, isGenerating]);
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.dataset.index, 10);
+            if (!isNaN(index)) {
+              setActiveIndex(index);
+            }
+          }
+        });
+      },
+      { root: container, threshold: 0.6 }
+    );
+    const reelElements = Array.from(container.querySelectorAll(".reel-container"));
+    reelElements.forEach((el) => observer.observe(el));
+    return () => {
+      reelElements.forEach((el) => observer.unobserve(el));
+    };
+  }, [reels.length]);
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
     const storyboard = await generateStoryboard(prompt);
@@ -29,7 +52,9 @@ const App = () => {
       setPrompt("");
       if (containerRef.current) {
         setTimeout(() => {
-          containerRef.current.children[0]?.scrollIntoView({ behavior: "smooth" });
+          const newReelIndex = reels.length;
+          const newReelElement = containerRef.current.children[newReelIndex + 1];
+          newReelElement?.scrollIntoView({ behavior: "smooth" });
         }, 100);
       }
     }
@@ -59,21 +84,30 @@ const App = () => {
       false,
       {
         fileName: "<stdin>",
-        lineNumber: 60,
+        lineNumber: 89,
         columnNumber: 13
       }
     ) }, void 0, false, {
       fileName: "<stdin>",
-      lineNumber: 59,
+      lineNumber: 88,
       columnNumber: 9
     }),
-    reels.map((reel) => /* @__PURE__ */ jsxDEV("div", { className: "reel-container", children: /* @__PURE__ */ jsxDEV(Reel, { reelData: reel.storyboard }, void 0, false, {
+    reels.map((reel, index) => /* @__PURE__ */ jsxDEV("div", { className: "reel-container", "data-index": index, children: /* @__PURE__ */ jsxDEV(
+      Reel,
+      {
+        reelData: reel.storyboard,
+        isActive: index === activeIndex
+      },
+      void 0,
+      false,
+      {
+        fileName: "<stdin>",
+        lineNumber: 100,
+        columnNumber: 17
+      }
+    ) }, reel.id, false, {
       fileName: "<stdin>",
-      lineNumber: 71,
-      columnNumber: 13
-    }) }, reel.id, false, {
-      fileName: "<stdin>",
-      lineNumber: 70,
+      lineNumber: 99,
       columnNumber: 13
     })),
     reels.length > 0 && /* @__PURE__ */ jsxDEV("div", { id: "generator-bottom", className: "generator-container", children: /* @__PURE__ */ jsxDEV(
@@ -89,17 +123,17 @@ const App = () => {
       false,
       {
         fileName: "<stdin>",
-        lineNumber: 77,
+        lineNumber: 109,
         columnNumber: 17
       }
     ) }, void 0, false, {
       fileName: "<stdin>",
-      lineNumber: 76,
+      lineNumber: 108,
       columnNumber: 13
     })
   ] }, void 0, true, {
     fileName: "<stdin>",
-    lineNumber: 58,
+    lineNumber: 87,
     columnNumber: 5
   });
 };
@@ -108,29 +142,29 @@ const GeneratorView = ({ prompt, setPrompt, handleGenerate, isGenerating, messag
     return /* @__PURE__ */ jsxDEV("div", { className: "loading-container", children: [
       /* @__PURE__ */ jsxDEV(LoadingSpinner, {}, void 0, false, {
         fileName: "<stdin>",
-        lineNumber: 95,
+        lineNumber: 127,
         columnNumber: 17
       }),
       /* @__PURE__ */ jsxDEV("p", { className: "loading-message", children: "Generating your masterpiece..." }, void 0, false, {
         fileName: "<stdin>",
-        lineNumber: 96,
+        lineNumber: 128,
         columnNumber: 17
       })
     ] }, void 0, true, {
       fileName: "<stdin>",
-      lineNumber: 94,
+      lineNumber: 126,
       columnNumber: 13
     });
   }
   return /* @__PURE__ */ jsxDEV("div", { className: "generator-ui", children: [
     /* @__PURE__ */ jsxDEV("h1", { children: "AI Reels" }, void 0, false, {
       fileName: "<stdin>",
-      lineNumber: 103,
+      lineNumber: 135,
       columnNumber: 13
     }),
     /* @__PURE__ */ jsxDEV("p", { children: message }, void 0, false, {
       fileName: "<stdin>",
-      lineNumber: 104,
+      lineNumber: 136,
       columnNumber: 13
     }),
     /* @__PURE__ */ jsxDEV(
@@ -146,7 +180,7 @@ const GeneratorView = ({ prompt, setPrompt, handleGenerate, isGenerating, messag
       false,
       {
         fileName: "<stdin>",
-        lineNumber: 105,
+        lineNumber: 137,
         columnNumber: 13
       }
     ),
@@ -162,19 +196,19 @@ const GeneratorView = ({ prompt, setPrompt, handleGenerate, isGenerating, messag
       false,
       {
         fileName: "<stdin>",
-        lineNumber: 112,
+        lineNumber: 144,
         columnNumber: 13
       }
     )
   ] }, void 0, true, {
     fileName: "<stdin>",
-    lineNumber: 102,
+    lineNumber: 134,
     columnNumber: 9
   });
 };
 const root = createRoot(document.getElementById("root"));
 root.render(/* @__PURE__ */ jsxDEV(App, {}, void 0, false, {
   fileName: "<stdin>",
-  lineNumber: 125,
+  lineNumber: 157,
   columnNumber: 13
 }));
