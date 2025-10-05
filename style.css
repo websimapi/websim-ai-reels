@@ -1,0 +1,124 @@
+body,
+html,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #000;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  color: white;
+}
+
+.app-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch; /* for smooth scrolling on iOS */
+}
+
+.reel-container,
+.generator-container {
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: start;
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.generator-ui {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: center;
+  gap: 20px;
+  width: 90%;
+  max-width: 400px;
+}
+
+.generator-ui h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.generator-ui p {
+    font-size: 16px;
+    color: #ccc;
+    margin-bottom: 20px;
+}
+
+.prompt-input {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #444;
+  background-color: #222;
+  color: white;
+  box-sizing: border-box;
+}
+
+.generate-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 10px;
+  border: none;
+  background-color: #1e90ff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.generate-button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+.generate-button:not(:disabled):hover {
+  background-color: #0073e6;
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.loading-message {
+    font-size: 18px;
+    color: #eee;
+}
+
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid #ffffff;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
